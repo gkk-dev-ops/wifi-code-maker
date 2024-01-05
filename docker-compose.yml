@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - DOMAIN_NAME=example.com # change this to your domain name
+        - PORT=8004 # change this to your port number
+    ports:
+      - "8004:8000"
+    volumes:
+      - ./app/persistant:/app/persistant
+    environment:
+      - ALLOWED_ORIGINS=["http://example.com:*"]
