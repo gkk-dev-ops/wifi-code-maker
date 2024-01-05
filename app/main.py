@@ -23,8 +23,6 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 ALLOWED_ORIGINS = json.loads(os.environ.get("ALLOWED_ORIGINS"))
-with open("tmp.txt", "w") as file:
-    file.write(str(ALLOWED_ORIGINS))
 
 app.add_middleware(
     CORSMiddleware,
