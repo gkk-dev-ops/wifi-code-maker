@@ -20,6 +20,8 @@ def get_db():
 
 
 models.Base.metadata.create_all(bind=engine)
+
+ssids_deleted_since_last_reboot = []
 app = FastAPI()
 
 ALLOWED_ORIGINS = json.loads(os.environ.get("ALLOWED_ORIGINS"))
@@ -44,9 +46,15 @@ def get_all_wifis(db: Session = Depends(get_db)):
 @app.delete("/wifi/{wifi_id}")
 def remove_wifi(wifi_id: str, db: Session = Depends(get_db)):
     isWifiAvailable = crud.find_wifi(db=db, wifi_id=wifi_id)
-    if not isWifiAvailable:
+    wasRecentlyDeleted = wifi_id in ssids_deleted_since_last_reboot
+    if not isWifiAvailable and wasRecentlyDeleted:
         return Response(status_code=204)
-    return crud.remove_wifi(db=db, wifi_id=wifi_id)
+    elif not isWifiAvailable and not wasRecentlyDeleted:
+        raise HTTPException(
+            status_code=404, detail="Wifi with this ssid does not exist")
+    else:
+        ssids_deleted_since_last_reboot.append(wifi_id)
+        return crud.remove_wifi(db=db, wifi_id=wifi_id)
 
 
 @app.get("/healthcheck")
