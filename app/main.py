@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Response
+from fastapi import FastAPI, Depends, HTTPException, Response, Request
 from fastapi.responses import FileResponse
 from wifi_code_maker.encode_qr_code import makeQrCode
 from fastapi.middleware.cors import CORSMiddleware
@@ -7,6 +7,7 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from wifi_code_maker import crud, models, schemas
 from wifi_code_maker.database import SessionLocal, engine
+
 import os
 import json
 
@@ -35,8 +36,10 @@ app.add_middleware(
 
 
 @app.get("/wifis")
-def get_all_wifis(db: Session = Depends(get_db)):
+def get_all_wifis(db: Session = Depends(get_db), request: Request = None):
     all_wifis = crud.get_all_wifis(db=db)
+    qr_code_host = f"{request.url.scheme}://{request.url.netloc}"
+    all_wifis = [ schemas.WifiConfig(ssid=wifi.ssid, password=wifi.password, qr_code_url=f"{qr_code_host}{wifi.qr_code_url[1:]}") for wifi in all_wifis]
     if len(all_wifis) == 0:
         return Response(status_code=204)
     else:

@@ -118,7 +118,7 @@ function App() {
               <div>
                 <img
                   className="h-96 w-96 object-scale-down"
-                  src={`${BASE_URL}/${wifi.qr_code_url}`}
+                  src={wifi.qr_code_url}
                   alt={wifi.ssid}
                 />
               </div>

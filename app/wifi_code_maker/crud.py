@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
-def get_all_wifis(db: Session):
+def get_all_wifis(db: Session) -> list[schemas.WifiConfig]:
     return db.query(models.SavedWifiConfig).all()
 
 
