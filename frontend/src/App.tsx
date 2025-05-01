@@ -20,14 +20,21 @@ function App() {
   const [wifis, setWifis] = useState<WifiConfig[]>([]);
 
   function getWifis() {
-    axios.get(`${BASE_URL}/wifis`).then((res) => {
-      if (res.status === 204) {
-        setWifis([]);
-        return;
-      } else {
-        setWifis(res.data);
+    setWifis([
+      {
+          "ssid": "nice",
+          "password": "nice",
+          "qr_code_url": "http://localhost:8004/persistant/static/img/WIFI:S:nice;T:WPA;P:nice;.png"
       }
-    });
+  ])
+    // axios.get(`${BASE_URL}/wifis`).then((res) => {
+    //   if (res.status === 204) {
+    //     setWifis([]);
+    //     return;
+    //   } else {
+    //     setWifis(res.data);
+    //   }
+    // });
   }
   function removeWifi(ssid: string) {
     axios.delete(`${BASE_URL}/wifi/${ssid}`).then(() => {
