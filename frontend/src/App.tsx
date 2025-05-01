@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import TrashIcon from "./assets/trash.svg";
+import { CopyButton } from "./CopyButton";
 
 type WifiConfig = {
   ssid: string;
@@ -126,15 +127,21 @@ function App() {
                 <div className="flex min-w-72 flex-col gap-8 text-2xl">
                   <div className="flex flex-col gap-1">
                     <p>SSID:</p>
-                    <p>{wifi.ssid}</p>
+                    <div className="flex flex-row items-center gap-2">
+                      <p>{wifi.ssid}</p>
+                      <CopyButton text={wifi.ssid} />
+                    </div>
                   </div>
                   <div className="flex flex-col gap-1">
                     <p>Password:</p>
-                    <p>{wifi.password}</p>
+                    <div className="flex flex-row items-center gap-2">
+                      <p>{wifi.password}</p>
+                      <CopyButton text={wifi.password} />
+                    </div>
                   </div>
                 </div>
                 <div
-                  className="cursor-pointer rounded p-2 hover:bg-slate-100"
+                  className="h-10 w-10 cursor-pointer rounded border border-black p-2 transition-colors duration-300 hover:bg-red-300"
                   onClick={() => removeWifi(wifi.ssid)}
                 >
                   <img src={TrashIcon} alt="" />

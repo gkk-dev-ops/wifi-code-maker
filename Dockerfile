@@ -4,6 +4,7 @@ WORKDIR /frontend
 COPY ./frontend /frontend
 RUN npm ci
 ARG DOMAIN_NAME=${DOMAIN_NAME:-localhost}
+ARG PORT=${PORT:-8000}
 RUN echo "VITE_HOST=$DOMAIN_NAME" > .env
 RUN echo "VITE_PORT=$PORT" >> .env
 RUN npm run build
