@@ -16,4 +16,11 @@ After providing WIFI data download of qr code starts.
 git clone https://github.com/gkk-dev-ops/wifi-code-maker.git
 ```
 
-Adjust PORT and DOMAIN_NAME of your server in docker compose `app.build.args` and `ALLOWED_ORIGINS`.
+The frontend uses the browser's current origin for API requests, so it works
+behind either local HTTP or a TLS-terminating reverse proxy. Adjust
+`ALLOWED_ORIGINS` when the API is accessed from another origin.
+
+Pushes to `master` publish an amd64 image to
+`ghcr.io/gkk-dev-ops/wifi-code-maker`. GitHub Container Registry creates new
+packages as private; change the package visibility to public before deploying
+it without an image pull secret.

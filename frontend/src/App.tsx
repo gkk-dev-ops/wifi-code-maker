@@ -9,10 +9,7 @@ type WifiConfig = {
   qr_code_url: string;
 };
 
-const HOST = import.meta.env.VITE_HOST;
-const protocol = "http";
-const PORT = import.meta.env.VITE_PORT;
-const BASE_URL = `${protocol}://${HOST}:${PORT}`;
+const BASE_URL = window.location.origin;
 
 function App() {
   const [passwordField, setPasswordField] = useState("");
@@ -30,7 +27,7 @@ function App() {
     });
   }
   function removeWifi(ssid: string) {
-    axios.delete(`${BASE_URL}/wifi/${ssid}`).then(() => {
+    axios.delete(`${BASE_URL}/wifi/${encodeURIComponent(ssid)}`).then(() => {
       getWifis();
     });
   }

@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, Response, Request
+from fastapi import FastAPI, Depends, HTTPException, Response
 from fastapi.responses import FileResponse
 from wifi_code_maker.encode_qr_code import makeQrCode
 from fastapi.middleware.cors import CORSMiddleware
@@ -36,17 +36,20 @@ app.add_middleware(
 
 
 @app.get("/wifis")
-def get_all_wifis(db: Session = Depends(get_db), request: Request = None):
+def get_all_wifis(db: Session = Depends(get_db)):
     all_wifis = crud.get_all_wifis(db=db)
-    qr_code_host = f"{request.url.scheme}://{request.url.netloc}"
-    all_wifis = [ schemas.WifiConfig(ssid=wifi.ssid, password=wifi.password, qr_code_url=f"{qr_code_host}{wifi.qr_code_url[1:]}") for wifi in all_wifis]
+    all_wifis = [schemas.WifiConfig(
+        ssid=wifi.ssid,
+        password=wifi.password,
+        qr_code_url=wifi.qr_code_url[1:],
+    ) for wifi in all_wifis]
     if len(all_wifis) == 0:
         return Response(status_code=204)
     else:
         return all_wifis
 
 
-@app.delete("/wifi/{wifi_id}")
+@app.delete("/wifi/{wifi_id:path}")
 def remove_wifi(wifi_id: str, db: Session = Depends(get_db)):
     isWifiAvailable = crud.find_wifi(db=db, wifi_id=wifi_id)
     wasRecentlyDeleted = wifi_id in ssids_deleted_since_last_reboot
