@@ -10,6 +10,10 @@ from wifi_code_maker.database import SessionLocal, engine
 
 import os
 import json
+from pathlib import Path
+
+
+Path("./persistant/static/img").mkdir(parents=True, exist_ok=True)
 
 
 def get_db():
@@ -25,7 +29,7 @@ models.Base.metadata.create_all(bind=engine)
 ssids_deleted_since_last_reboot = []
 app = FastAPI()
 
-ALLOWED_ORIGINS = json.loads(os.environ.get("ALLOWED_ORIGINS"))
+ALLOWED_ORIGINS = json.loads(os.environ.get("ALLOWED_ORIGINS", "[]"))
 
 app.add_middleware(
     CORSMiddleware,
